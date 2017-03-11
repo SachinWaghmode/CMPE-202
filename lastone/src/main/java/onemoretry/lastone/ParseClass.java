@@ -62,7 +62,7 @@ public class ParseClass extends VoidVisitorAdapter{
 					e.printStackTrace();
 				}
 				new ParseClass().visit(javaClass, null) ;
-				allclasses.put(classname, javaClass.);
+				allclasses.put(classname, javaClass.toString());
 
 				System.out.println(javaClass.toString());
 				System.out.println(classname);

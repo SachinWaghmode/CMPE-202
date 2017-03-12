@@ -40,6 +40,8 @@ public class ParseClass extends VoidVisitorAdapter{
         super.visit(n, arg);
      }
 	
+
+	
 	
     
     
@@ -66,10 +68,31 @@ public class ParseClass extends VoidVisitorAdapter{
 
 				System.out.println(javaClass.toString());
 				System.out.println(classname);
-			}
+				generatePlantUML(classname);
+				
+				}
+		  }
 		}
-		}
-		 
+		
+	public void generatePlantUML(String intermediateCode){
+	 String startUML = "@startuml";
+	 String endUML = "@enduml";
+	 
+	 
+	 intermediateCode = startUML + "\n" + intermediateCode + "\n" + endUML;
+	 
+	 
+	 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
                 
         
         

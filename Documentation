@@ -1,0 +1,11 @@
+Create a sample Java Project
+
+Add jar for PlantUML
+
+install Graphviz using brew: 
+
+You can easily install GraphViz by installing brew on your Mac machine. This could fix issues if you have installed GraphViz as .dmg package.
+brew install libtool
+brew link libtool
+brew install graphviz
+brew link --overwrite graphviz

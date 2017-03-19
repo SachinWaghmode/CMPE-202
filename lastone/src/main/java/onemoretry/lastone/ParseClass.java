@@ -79,9 +79,19 @@ public class ParseClass extends VoidVisitorAdapter{
 	 String endUML = "@enduml";
 	 
 	 
-	 intermediateCode = startUML + "\n" + intermediateCode + "\n" + endUML;
+	 resul = startUML + "\n" + intermediateCode + "\n" + endUML;
 	 
+	 SourceStringReader s = new SourceStringReader(resul);
+	 try
+	 {
+		 FileOutputStream f = new FileOutputStream (outpath);
+		 s.generateImage(f);
+		 f.close();
 	 
+	 }
+	 catch (Exception e){
+		 System.out.println(e);
+	 }
 	 
 	}
 	

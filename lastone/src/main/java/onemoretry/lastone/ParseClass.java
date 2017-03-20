@@ -28,15 +28,54 @@ public class ParseClass extends VoidVisitorAdapter{
     String resultstring="";
     
 	Map<String, String> allclasses = new HashMap<String, String>();
+	Map<String, String> allAttributes = new HashMap<String, String>();
 
-	// public static void main(String[] args) throws Exception {
-
-	// FileInputStream in = new
-	// FileInputStream("/Users/sachinwaghmode/eclipse/lastone/src/main/TestCase1/");
+	
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+        List<BodyDeclaration<?>> classList = n.getMembers() ;
+        classname = "class " ;
+        resul += classname + n.getName() + " {"; 
         
-        classname += n.getName();
-        System.out.println(classname);
+	for (BodyDeclaration bd : classList )
+        {
+        	if(bd instanceof FieldDeclaration)
+        	{
+        		FieldDeclaration attribute = (FieldDeclaration) bd ;
+        		if (attribute.getModifiers().toString().compareToIgnoreCase("public")==0)
+        			modifier = "+";
+        		else if (attribute.getModifiers().toString().compareToIgnoreCase("private")==0)
+        			modifier = "-";
+        		else
+        			modifier = "#";
+        		
+        		
+        		resul += "\n" + modifier ;
+        		List<VariableDeclarator> attributeList = attribute.getVariables();
+        				for (VariableDeclarator var : attributeList)
+        				{
+        					//allAttributes.put(classname ,var.getName());
+        					//System.out.println(var.getType());
+        					//if (var.getType() instanceof  ReferenceType)
+        						//ReferenceType rt = new ReferenceType();
+        						//rt.getElementType();
+        					//System.out.println(var.getName());
+        					
+        					
+        					
+        					resul += var.getType();
+        					resul += var.getName();
+        					
+        					//System.out.println(resul);
+        					
+        					
+        				}
+        	}
+        	
+        
+             
+       
+        }
+        resul += "\n}\n";
         super.visit(n, arg);
      }
 	
@@ -45,9 +84,9 @@ public class ParseClass extends VoidVisitorAdapter{
 	
     
     
-	public void compile(String inputfil) {
+	public void compile(String inputfile, String outputfile ) {
 		// parse the file
-		File config = new File(inputfil);
+		File config = new File(inputfile);
 		File[] javafileset = config.listFiles();
 		if (javafileset != null) {
 			for (File javaFile : javafileset) {
@@ -66,22 +105,22 @@ public class ParseClass extends VoidVisitorAdapter{
 				new ParseClass().visit(javaClass, null) ;
 				allclasses.put(classname, javaClass.toString());
 
-				System.out.println(javaClass.toString());
-				System.out.println(classname);
-				generatePlantUML(classname);
+				//System.out.println(javaClass.toString());
+				//System.out.println(classname);
+				generatePlantUML(resul,outfile);
 				
 				}
 		  }
 		}
 		
-	public void generatePlantUML(String intermediateCode){
+	public void generatePlantUML(String intermediateCode, String outpath){
 	 String startUML = "@startuml";
 	 String endUML = "@enduml";
+	 String result =" ";
 	 
+	 result = startUML + "\n" + intermediateCode + "\n" + endUML;
 	 
-	 resul = startUML + "\n" + intermediateCode + "\n" + endUML;
-	 
-	 SourceStringReader s = new SourceStringReader(resul);
+	 SourceStringReader s = new SourceStringReader(result);
 	 try
 	 {
 		 FileOutputStream f = new FileOutputStream (outpath);

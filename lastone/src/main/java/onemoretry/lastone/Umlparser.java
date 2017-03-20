@@ -9,7 +9,7 @@ public class Umlparser {
 		
 		ParseClass pc = new ParseClass();
 	
-		pc.compile(infile);
+		pc.compile(infile,outfile);
 	
 	}
 }

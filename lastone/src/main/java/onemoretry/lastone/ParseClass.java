@@ -43,7 +43,7 @@ public class ParseClass extends VoidVisitorAdapter{
         		FieldDeclaration attribute = (FieldDeclaration) bd ;
         		if (attribute.getModifiers().toString().compareToIgnoreCase("public")==0)
         			modifier = "+";
-        		else if (attribute.getModifiers().toString().compareToIgnoreCase("private")==0)
+        		else if (attribute.getModifiers().toString().compareToIgnoreCase("[private]")==0)
         			modifier = "-";
         		else
         			modifier = "#";
@@ -53,20 +53,23 @@ public class ParseClass extends VoidVisitorAdapter{
         		List<VariableDeclarator> attributeList = attribute.getVariables();
         				for (VariableDeclarator var : attributeList)
         				{
-        					//allAttributes.put(classname ,var.getName());
-        					//System.out.println(var.getType());
-        					//if (var.getType() instanceof  ReferenceType)
-        						//ReferenceType rt = new ReferenceType();
-        						//rt.getElementType();
-        					//System.out.println(var.getName());
-        					
-        					
-        					
+        					if (var.getType() instanceof ReferenceType)
+        					{
+        						if (var.getType().toString().contains("[]"))
+        						{
+        							resul += "\n" + modifier ;
+                					resul += var.getType();
+                					resul += var.getName();
+                					allAttributes.put(var.getType().toString(),var.getName().toString());
+        						}
+        							
+        					}else{
+        						resul += "\n" + modifier ;
         					resul += var.getType();
         					resul += var.getName();
+        					allAttributes.put(var.getType().toString(),var.getName().toString());
         					
-        					//System.out.println(resul);
-        					
+        					}
         					
         				}
         	}

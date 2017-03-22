@@ -79,11 +79,44 @@ public class ParseClass extends VoidVisitorAdapter{
        
         }
         resul += "\n}\n";
+	drawDependency();
         super.visit(n, arg);
      }
 	
 
-	
+	public void drawDependency()
+	{
+		
+        for (String cname: allClasses.keySet())
+        {
+        	//System.out.println(cname);
+        	for(String aname: allAttributes.keySet())
+        	{
+        		//System.out.println(aname);
+        		//if (cname == aname)
+        		//{
+        		if (aname.contains("Collection"))
+        		 {
+        			drawline = "class"+ cname + " -- " + "class" + aname ;
+        			//System.out.println(resultString);
+        			dependency.put(cname, drawline);
+        			resultString += drawline + "\n";
+        			//System.out.println(resultString);
+        			
+        		 }
+        		/* if (aname.contains(cname))
+        		 {
+         			resultString = "class "+ cname + "--" + "class " + aname ;
+         			System.out.println(resultString);
+         			
+         		 } */
+        		//}
+        			
+        	
+        	}
+        }
+		
+	}
 	
     
     

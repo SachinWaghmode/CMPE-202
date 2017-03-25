@@ -21,6 +21,9 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 public class ParseClass extends VoidVisitorAdapter{
 	static String out = "";
 	static String resul = "";
+	static String nonPrimitive="";
+	static String finalG="";
+	static String drawline="";
 	public static String pUmlinput = "";
 	String classname = "[";
     String methodname ="";
@@ -60,14 +63,22 @@ public class ParseClass extends VoidVisitorAdapter{
         							resul += "\n" + modifier ;
                 					resul += var.getType();
                 					resul += var.getName();
-                					allAttributes.put(var.getType().toString(),var.getName().toString());
+                					//allAttributes.put(var.getType().toString(),var.getName().toString());
         						}
+							else{
+        							nonPrimitive += "\n";
+        							nonPrimitive += var.getType();
+        							//nonPrimitive += var.getName();
+        							
+        							//System.out.println(allAttributes.values());
+        						}
+        							
         							
         					}else{
         						resul += "\n" + modifier ;
         					resul += var.getType();
         					resul += var.getName();
-        					allAttributes.put(var.getType().toString(),var.getName().toString());
+        					//allAttributes.put(var.getType().toString(),var.getName().toString());
         					
         					}
         					
@@ -79,10 +90,24 @@ public class ParseClass extends VoidVisitorAdapter{
        
         }
         resul += "\n}\n";
-	drawDependency();
+        allClasses.put(n.getName().toString(),resul);
+        allAttributes.put(n.getName().toString(),nonPrimitive);
+        resul = "";
+        drawDependency();
+        printGrammer();
         super.visit(n, arg);
      }
 	
+	public void printGrammer(){
+		
+		
+		for(Map.Entry pairs : allClasses.entrySet())
+		{
+			
+			finalG += pairs.getValue().toString();
+	        
+	    }
+	}
 
 	public void drawDependency()
 	{

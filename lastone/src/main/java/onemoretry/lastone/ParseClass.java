@@ -26,9 +26,9 @@ public class ParseClass extends VoidVisitorAdapter{
 	static String drawline="";
 	public static String pUmlinput = "";
 	String classname = "[";
-    String methodname ="";
-    String modifier ="";
-    String resultstring="";
+    	String methodname ="";
+    	String modifier ="";
+    	String resultstring="";
     
 	Map<String, String> allclasses = new HashMap<String, String>();
 	Map<String, String> allAttributes = new HashMap<String, String>();
@@ -63,14 +63,19 @@ public class ParseClass extends VoidVisitorAdapter{
         							resul += "\n" + modifier ;
                 					resul += var.getType();
                 					resul += var.getName();
-                					//allAttributes.put(var.getType().toString(),var.getName().toString());
+                					
         						}
 							else{
-        							nonPrimitive += "\n";
-        							nonPrimitive += var.getType();
+        							nonPrimitive = var.getType().toString();
+        							if (nonPrimitive.contains("Collection"))
+        							{
+        							String	s = nonPrimitive.substring(nonPrimitive.indexOf("<")+1);
+              		    					String	 f =s.replace(">", "");
+              		    					attributeSet.add(f);
+        							}
+        							else{	
+        							attributeSet.add(var.getType().toString());
         							//nonPrimitive += var.getName();
-        							
-        							//System.out.println(allAttributes.values());
         						}
         							
         							
@@ -78,7 +83,7 @@ public class ParseClass extends VoidVisitorAdapter{
         						resul += "\n" + modifier ;
         					resul += var.getType();
         					resul += var.getName();
-        					//allAttributes.put(var.getType().toString(),var.getName().toString());
+        					
         					
         					}
         					
@@ -91,7 +96,8 @@ public class ParseClass extends VoidVisitorAdapter{
         }
         resul += "\n}\n";
         allClasses.put(n.getName().toString(),resul);
-        allAttributes.put(n.getName().toString(),nonPrimitive);
+        allAttributes.put(n.getName().toString(),attributeSet);
+        //System.out.println("attributeset"+attributeSet);
         resul = "";
         drawDependency();
         printGrammer();
@@ -112,35 +118,40 @@ public class ParseClass extends VoidVisitorAdapter{
 	public void drawDependency()
 	{
 		
-        for (String cname: allClasses.keySet())
-        {
-        	//System.out.println(cname);
-        	for(String aname: allAttributes.keySet())
-        	{
-        		//System.out.println(aname);
-        		//if (cname == aname)
-        		//{
-        		if (aname.contains("Collection"))
-        		 {
-        			drawline = "class"+ cname + " -- " + "class" + aname ;
-        			//System.out.println(resultString);
-        			dependency.put(cname, drawline);
-        			resultString += drawline + "\n";
-        			//System.out.println(resultString);
-        			
-        		 }
-        		/* if (aname.contains(cname))
-        		 {
-         			resultString = "class "+ cname + "--" + "class " + aname ;
-         			System.out.println(resultString);
-         			
-         		 } */
-        		//}
-        			
-        	
-        	}
-        }
+        String ckcoll="";
 		
+		Boolean flag=true;
+        	
+        	for(String cname : allClasses.keySet())	
+        	{
+        		
+        		
+        		for   (String aname : attributeSet)
+        		{
+        			
+        			ckcoll=cname+aname;
+        			
+        			if (checkclass.contains(aname))
+        			{
+        				System.out.println("do nothing:");
+        			}
+        			else
+        			{
+        				
+        				drawline = cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "1"  + "\"" + aname ;
+        				resultString += drawline + "\n";
+        				checkclass += cname+aname;
+        				
+        			}
+    			
+					
+        		}
+        	}
+        	
+        	
+        
+		
+	
 	}
 	
     

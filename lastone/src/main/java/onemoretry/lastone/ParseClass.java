@@ -70,12 +70,12 @@ public class ParseClass extends VoidVisitorAdapter{
         							if (nonPrimitive.contains("Collection"))
         							{
         							String	s = nonPrimitive.substring(nonPrimitive.indexOf("<")+1);
-              		    					String	 f =s.replace(">", "");
+              		    					String	 f =s.replace(">", "*");
               		    					attributeSet.add(f);
         							}
         							else{	
         							attributeSet.add(var.getType().toString());
-        							//nonPrimitive += var.getName();
+        							
         						}
         							
         							
@@ -97,7 +97,6 @@ public class ParseClass extends VoidVisitorAdapter{
         resul += "\n}\n";
         allClasses.put(n.getName().toString(),resul);
         allAttributes.put(n.getName().toString(),attributeSet);
-        //System.out.println("attributeset"+attributeSet);
         resul = "";
         drawDependency();
         printGrammer();
@@ -133,15 +132,25 @@ public class ParseClass extends VoidVisitorAdapter{
         			
         			if (checkclass.contains(aname))
         			{
-        				System.out.println("do nothing:");
+        				continue;
+					//System.out.println("do nothing:");
         			}
         			else
         			{
-        				
+        				//Show multiplicity
+        				if (aname.contains("*"))
+        				{
+        					String remove = aname.replace("*", "");
+        					drawline = cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "*"  + "\"" + remove ;
+            				resultString += drawline + "\n";
+            				checkclass += cname+remove;
+        				}
+        				else
+        				{
         				drawline = cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "1"  + "\"" + aname ;
         				resultString += drawline + "\n";
         				checkclass += cname+aname;
-        				
+        				}
         			}
     			
 					

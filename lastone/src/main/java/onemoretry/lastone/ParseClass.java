@@ -36,7 +36,14 @@ public class ParseClass extends VoidVisitorAdapter{
 	
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
         List<BodyDeclaration<?>> classList = n.getMembers() ;
-        classname = "class " ;
+         if(n.isInterface())
+        {
+        	classname = "interface " ;
+        
+        }else{
+        	classname = "class " ;
+        	notinterface = true;
+        }
         resul += classname + n.getName() + " {"; 
         
 	for (BodyDeclaration bd : classList )
@@ -95,7 +102,16 @@ public class ParseClass extends VoidVisitorAdapter{
        
         }
         resul += "\n}\n";
-        allClasses.put(n.getName().toString(),resul);
+        if (notinterface)
+        {
+        	allClasses.put(n.getName().toString(),resul);
+        	//notinterface=false;
+        }
+        else
+        {
+        	allInterfaces.put(n.getName().toString(),resul);
+        	//System.out.println(allInterfaces);
+        }
         allAttributes.put(n.getName().toString(),attributeSet);
         resul = "";
         drawDependency();

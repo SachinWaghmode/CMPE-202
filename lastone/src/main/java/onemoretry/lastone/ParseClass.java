@@ -94,13 +94,59 @@ public class ParseClass extends VoidVisitorAdapter{
         					
         					}
         					
-        				}
-        	}
+        				}//end of variable declarator
+        	}//end of field Decalaration
         	
-        
+        	if (bd instanceof MethodDeclaration)
+        	{
+        		MethodDeclaration method = (MethodDeclaration) bd;
+        		
+        		
+        		if (method.getModifiers().toString().compareToIgnoreCase("[public]")==0)
+        			modifier = "+";
+        		else if (method.getModifiers().toString().compareToIgnoreCase("[private]")==0)
+        			modifier = "-";
+        		else
+        			modifier = "#";
+        		
+        		
+        		resul += "\n";
+        		resul += modifier;
+        		resul += method.getName().toString();
+        		
+        		
+        		List<Parameter> methodargument = method.getParameters();
+        		for (Parameter argmnt : methodargument)
+        		{
+        			resul += "(";
+        			resul += argmnt.getName().toString();
+        			resul += " : ";
+        		//	resul += argmnt.getType();
+        		//	resul += ")";
+        			if (argmnt.getType() instanceof ReferenceType)
+					{
+        				resul += argmnt.getType();
+        				resul += ")";
+						
+							attributeSet.add(argmnt.getType().toString());
+							//nonPrimitive += var.getName();  
+						 									
+					}else{
+						
+					resul += argmnt.getType();
+					resul += ")";
+        			//System.out.println(argmnt.getName().toString());
+        			//System.out.println(argmnt.getType());
+					}
+        		
+        		resul += ":";
+        		resul += method.getType().toString();
+        		}
+        	}//end of method declaration
+        	
              
        
-        }
+        }//end of Body Declaration
         resul += "\n}\n";
         if (notinterface)
         {

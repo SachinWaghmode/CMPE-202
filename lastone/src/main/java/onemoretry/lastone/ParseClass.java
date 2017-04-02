@@ -44,7 +44,29 @@ public class ParseClass extends VoidVisitorAdapter{
         	classname = "class " ;
         	notinterface = true;
         }
-        resul += classname + n.getName() + " {"; 
+        resul += classname + n.getName(); 
+	
+	 List<ClassOrInterfaceType> allExtends = n.getExtendedTypes();
+        for (ClassOrInterfaceType coi : allExtends)
+		{
+			
+			resul += " extends " + coi.getName();
+		}
+        
+        List<ClassOrInterfaceType> implementList = n.getImplementedTypes();
+		for (ClassOrInterfaceType ci : implementList)
+		{
+			if (morethanoneinterface)
+			{
+				resul+= "," +ci.getName();
+			}
+			else{
+			resul += " implements " + ci.getName();
+			morethanoneinterface = true;
+			}
+		}
+        
+        resul+= " {"; 
         
 	for (BodyDeclaration bd : classList )
         {
@@ -167,13 +189,15 @@ public class ParseClass extends VoidVisitorAdapter{
 	
 	public void printGrammer(){
 		
-		
+		for(Map.Entry pairs : allInterfaces.entrySet())
+		{
+			finalG += pairs.getValue().toString(); 
+	    	}
 		for(Map.Entry pairs : allClasses.entrySet())
 		{
-			
-			finalG += pairs.getValue().toString();
-	        
-	    }
+			finalG += pairs.getValue().toString(); 
+	    
+	    	}
 	}
 
 	public void drawDependency()

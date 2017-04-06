@@ -28,6 +28,7 @@ public class ParseClass extends VoidVisitorAdapter{
 	String classname = "[";
     	String methodname ="";
     	String modifier ="";
+	String s1="";
     	String resultstring="";
     
 	Map<String, String> allclasses = new HashMap<String, String>();
@@ -149,8 +150,8 @@ public class ParseClass extends VoidVisitorAdapter{
 					{
         				resul += argmnt.getType();
         				resul += ")";
-						
-							attributeSet.add(argmnt.getType().toString());
+					s1 = argmnt.getType().toString() + "uses";	
+							attributeSet.add(s1);
 							//nonPrimitive += var.getName();  
 						 									
 					}else{
@@ -228,6 +229,13 @@ public class ParseClass extends VoidVisitorAdapter{
         				{
         					String remove = aname.replace("*", "");
         					drawline = cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "*"  + "\"" + remove ;
+            				resultString += drawline + "\n";
+            				checkclass += cname+remove;
+        				}
+        				else if (aname.contains("uses"))
+        				{
+        					String remove = aname.replace("uses", "");
+        					drawline = cname + " ..> "   + remove ;
             				resultString += drawline + "\n";
             				checkclass += cname+remove;
         				}

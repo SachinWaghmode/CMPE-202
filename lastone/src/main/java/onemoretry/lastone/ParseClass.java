@@ -133,38 +133,90 @@ public class ParseClass extends VoidVisitorAdapter{
         			modifier = "#";
         		
         		
-        		resul += "\n";
-        		resul += modifier;
-        		resul += method.getName().toString();
+        		methodname= method.getName().toString();
+        		//System.out.println(methodname);
         		
-        		
-        		List<Parameter> methodargument = method.getParameters();
-        		for (Parameter argmnt : methodargument)
+        	
+        		for (String mname: modifierAttribute.keySet())
         		{
-        			resul += "(";
-        			resul += argmnt.getName().toString();
-        			resul += " : ";
-        		//	resul += argmnt.getType();
-        		//	resul += ")";
-        			if (argmnt.getType() instanceof ReferenceType)
-					{
-        				resul += argmnt.getType();
-        				resul += ")";
-					s1 = argmnt.getType().toString() + "uses";	
-							attributeSet.add(s1);
-							//nonPrimitive += var.getName();  
-						 									
-					}else{
-						
-					resul += argmnt.getType();
-					resul += ")";
-        			//System.out.println(argmnt.getName().toString());
-        			//System.out.println(argmnt.getType());
-					}
-        		
-        		resul += ":";
-        		resul += method.getType().toString();
+        			if  ( methodname.contains("get") )
+        				methodname = methodname.replace("get", "");
+        			else if (methodname.contains("set"))
+        				methodname = methodname.replace("set", "");
+        			//System.out.println(mname);
+        			if (methodname.compareToIgnoreCase(mname)==0)
+        			{
+        				//System.out.println(methodname);
+        				//System.out.println("do nothing");
+        				gettersetter = true;
+        			}
+        		}	
+        		if (!gettersetter)
+        			{
+        				resul += "\n";
+                		resul += modifier;
+                		resul += method.getName().toString();
+                		
+                		
+                		List<Parameter> methodargument = method.getParameters();
+                		for (Parameter argmnt : methodargument)
+                		{
+                			if (argmnt.getType() instanceof ReferenceType)
+        					{
+        						//check for array
+                				resul += "(";
+        						if (argmnt.getType().toString().contains("[]"))
+        						{
+        							
+        							resul += argmnt.getName();
+            						resul += ":";
+            						resul += argmnt.getType();
+        						}
+        						else{
+        						
+        							nonPrimitive = argmnt.getType().toString();
+        							if (nonPrimitive.contains("Collection"))
+        							{
+        							String	s = nonPrimitive.substring(nonPrimitive.indexOf("<")+1);
+              		    			String	 f =s.replace(">", "*");
+              		    			attributeSet.add(f);
+        							}
+        							else if(nonPrimitive.contains("String")){	
+        								
+                						resul += argmnt.getName();
+                						resul += ":";
+                						resul += argmnt.getType();
+                						//attributeSet.add(var.getType().toString());
+        							}
+        							else{
+        								
+                						resul += argmnt.getName();
+                						resul += ":";
+                						resul += argmnt.getType();
+        							attributeSet.add(argmnt.getType().toString());
+        							//System.out.println(var.getType().toString());
+        							//nonPrimitive += var.getName();  
+        							}
+        						}       									
+        					}else{
+        						
+        						resul += argmnt.getName();
+        						resul += ":";
+        						resul += argmnt.getType();
+        					   
+        					//System.out.println(resul);
+        					}   	
+                			resul += ")";
+        					modifierAttribute.put(argmnt.getName().toString() ,modifier);
+                			
+                		
+                		resul += ":";
+                		resul += method.getType().toString(); 
+                		}
         		}
+        		
+        		
+        	}//end of method declaration
         	}//end of method declaration
         	
              

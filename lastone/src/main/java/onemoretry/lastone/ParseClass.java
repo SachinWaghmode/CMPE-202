@@ -74,53 +74,74 @@ public class ParseClass extends VoidVisitorAdapter{
         	if(bd instanceof FieldDeclaration)
         	{
         		FieldDeclaration attribute = (FieldDeclaration) bd ;
-        		if (attribute.getModifiers().toString().compareToIgnoreCase("public")==0)
-        			modifier = "+";
-        		else if (attribute.getModifiers().toString().compareToIgnoreCase("[private]")==0)
+        		
+        		if (attribute.getModifiers().toString().contains("PRIVATE"))
         			modifier = "-";
-        		else
-        			modifier = "#";
-        		
-        		
-        		resul += "\n" + modifier ;
+        		else if (attribute.getModifiers().toString().contains("PUBLIC"))
+        			modifier = "+";
+        		else{
+        			modifier = "";
+        			skipattributes = true;
+        		}
+			
+			if (!skipattributes)// skip protected and package attributes
+        		{
         		List<VariableDeclarator> attributeList = attribute.getVariables();
         				for (VariableDeclarator var : attributeList)
-        				{
+        				{       					
+        					//check if primitive
+        					//System.out.println(var.getType());
         					if (var.getType() instanceof ReferenceType)
         					{
+        						//check for array
         						if (var.getType().toString().contains("[]"))
         						{
         							resul += "\n" + modifier ;
-                					resul += var.getType();
-                					resul += var.getName();
-                					
+        							resul += var.getName();
+            						resul += ":";
+            						resul += var.getType();
         						}
-							else{
+        						else{
+        						
         							nonPrimitive = var.getType().toString();
+        							
         							if (nonPrimitive.contains("Collection"))
         							{
         							String	s = nonPrimitive.substring(nonPrimitive.indexOf("<")+1);
-              		    					String	 f =s.replace(">", "*");
-              		    					attributeSet.add(f);
+              		    			String	 f =s.replace(">", "*");
+              		    			attributeSet.add(f);
+              		    			
         							}
-        							else{	
+        							else if(nonPrimitive.contains("String")){	
+        								resul += "\n" + modifier ;
+                						resul += var.getName();
+                						resul += ":";
+                						resul += var.getType();
+                						//attributeSet.add(var.getType().toString());
+        							}
+        							else{
         							attributeSet.add(var.getType().toString());
-        							
-        						}
-        							
-        							
+        							//System.out.println(var.getType().toString());
+        							//nonPrimitive += var.getName();  
+        							}
+        						}       									
         					}else{
         						resul += "\n" + modifier ;
-        					resul += var.getType();
-        					resul += var.getName();
+        						resul += var.getName();
+        						resul += ":";
+        						resul += var.getType();
+        					   
+        					//System.out.println(resul);
+        					}   	
         					
-        					
-        					}
-        					
-        				}//end of variable declarator
-        	}//end of field Decalaration
+        					modifierAttribute.put(var.getName().toString() ,modifier);
+        					//System.out.println(modifierAttribute);
+        				}//end of variable Declarator
+        				skipattributes = false;
+        		}//end of skipattributes
+        	}// end of field Declaration
         	
-        	if (bd instanceof MethodDeclaration)
+		if (bd instanceof MethodDeclaration)
         	{
         		MethodDeclaration method = (MethodDeclaration) bd;
         		

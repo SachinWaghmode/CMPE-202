@@ -159,18 +159,31 @@ public class ParseClass extends VoidVisitorAdapter{
         	
         		if(!skipmethod)
         		{
-        			for (String mname: modifierAttribute.keySet())
+        			for(Map.Entry pairs : modifierAttribute.entrySet())
         			{
+        				System.out.println(pairs.getKey().toString());
         				if  ( methodname.contains("get") )
         					methodname = methodname.replace("get", "");
         				else if (methodname.contains("set"))
         					methodname = methodname.replace("set", "");
         			
-        				if (methodname.compareToIgnoreCase(mname)==0)
+        				if (methodname.compareToIgnoreCase(pairs.getValue().toString())==0)
         				{      				
-        					gettersetter = true;
+        					gettersetter = true;	
         				}
+        				
+        				if (pairs.getKey().toString().compareToIgnoreCase(methodname)==0)
+						{
+        					String changemodifier= pairs.getValue().toString() ;
+        					pairs.setValue(changemodifier.replace("-", "+"));
+						//System.out.println(pairs.getValue());
+						}
+						attributegrammer += pairs.getValue().toString();
+						//System.out.println(resul);
         			}	
+        			//System.out.println(modifierAttribute);
+        			resul += attributegrammer;
+        			attributegrammer ="";
         			
         			if (!gettersetter)
         			{

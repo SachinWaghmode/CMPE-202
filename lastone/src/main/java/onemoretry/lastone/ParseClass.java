@@ -233,6 +233,48 @@ public class ParseClass extends VoidVisitorAdapter{
         		methodgrammer = "";
         	}//end of method declaration
         	
+        	     	if(bd instanceof ConstructorDeclaration)
+        	{
+        		ConstructorDeclaration constructor = (ConstructorDeclaration) bd;
+        		if(constructor.getModifiers().toString().contains("PUBLIC"))
+        			modifier = "+";
+        		
+        		constructorgrammer += "\n" + modifier + constructor.getName() + "(";
+        		List<Parameter> constructorargument = constructor.getParameters();
+        		for (Parameter argmnt : constructorargument)
+        		{
+        			constructorgrammer += argmnt.getName() + ":";
+        			if (argmnt.getType() instanceof ReferenceType)
+					{
+						//check for array
+						if (argmnt.getType().toString().contains("[]"))
+						{	
+    						constructorgrammer += argmnt.getType();
+						}
+						else{    						     
+							nonPrimitive = argmnt.getType().toString();     							
+								if (nonPrimitive.contains("Collection"))
+								{
+									String	s = nonPrimitive.substring(nonPrimitive.indexOf("<")+1);
+									String	 f =s.replace(">", "*");
+									attributeSet.add(f);
+								}
+								else 
+								if(nonPrimitive.contains("String")){	
+									constructorgrammer += argmnt.getType();
+								}
+								else{
+									constructorgrammer += argmnt.getType();
+									s1 = argmnt.getType().toString() + "uses";
+									attributeSet.add(s1);	
+								}
+						}       									
+					}else{  
+						constructorgrammer += argmnt.getType();
+     					}   	
+        		}//end of constructor argumnet
+        		constructorgrammer += ")";
+        	}//end of constructor declaration
         	
              
        

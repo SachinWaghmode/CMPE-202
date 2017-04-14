@@ -145,6 +145,18 @@ public class ParseClass extends VoidVisitorAdapter{
         	{
         		MethodDeclaration method = (MethodDeclaration) bd;
         		
+			List<Node> methodbody = method.getChildNodes();
+        		for (Node node: methodbody)
+        		{
+        			
+        			for(String attributename : attributeSet)
+        			{
+        				if (node.toString().contains(attributename))
+        				{
+        					//check if method body has only getter setter
+        				}
+        			}
+        		}
         		
         		if (method.getModifiers().toString().contains("PUBLIC"))
         			modifier = "+";

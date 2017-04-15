@@ -325,56 +325,133 @@ public class ParseClass extends VoidVisitorAdapter{
 	public void drawDependency()
 	{
 		
-        String ckcoll="";
-		
-		Boolean flag=true;
-        	
-        	for(String cname : allClasses.keySet())	
-        	{
-        		
-        		
-        		for   (String aname : attributeSet)
-        		{
-        			
-        			ckcoll=cname+aname;
-        			
-        			if (checkclass.contains(aname))
-        			{
-        				continue;
-					//System.out.println("do nothing:");
-        			}
-        			else
-        			{
-        				//Show multiplicity
-        				if (aname.contains("*"))
-        				{
-        					String remove = aname.replace("*", "");
-        					drawline = cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "*"  + "\"" + remove ;
-            				resultString += drawline + "\n";
-            				checkclass += cname+remove;
-        				}
-        				else if (aname.contains("uses"))
-        				{
-        					String remove = aname.replace("uses", "");
-        					drawline = cname + " ..> "   + remove ;
-            				resultString += drawline + "\n";
-            				checkclass += cname+remove;
-        				}
-        				else
-        				{
-        				drawline = cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "1"  + "\"" + aname ;
-        				resultString += drawline + "\n";
-        				checkclass += cname+aname;
-        				}
-        			}
-    			
-					
-        		}
-        	}
-        	
-        	
         
-		
+		String ckcoll="";
+		Boolean flag=false;
+		Boolean usesflag=false;
+		String removedependency = "";
+		String adddependency = "";
+		String removeuses = "";
+		String adduses ="";
+    
+		for (Map.Entry allattri : allAttributes.entrySet())
+		{
+			String cname = allattri.getKey().toString();
+			String aname = allattri.getValue().toString();
+			
+			//System.out.println("insider :" +aname);
+			//drawline = cname ;
+			//for(String s: allInterfaces.keySet())
+			//{
+			String atrriarray[] = aname.split(", ");
+			for (int i = 0; i < atrriarray.length; i++)
+			{
+				aname = atrriarray[i];
+				aname = aname.replace("[", "");
+				aname = aname.replace("]", "");
+				
+				String compare = aname.replace("*","");
+				compare = aname.replace("uses", "");
+				if (aname.contains("*") || aname.contains("uses"))
+				{
+				 removedependency = cname + "--" + compare;
+				 adddependency = compare+ "--" + cname;
+				 removeuses = cname+ ".." + compare;
+				 adduses = compare+ ".." + cname;
+				}
+				else
+				{
+					System.out.println(aname);
+					removedependency = cname + "--" + aname;
+					adddependency = aname + "--" + cname;
+				}
+				//System.out.println("set :"+dependencySet);
+				for (String sd : dependencySet)
+				{
+					if (sd.equalsIgnoreCase(removedependency) || sd.equalsIgnoreCase(adddependency))
+					{
+						flag = true;
+					}
+					if (sd.equalsIgnoreCase(removeuses) || sd.equalsIgnoreCase(adduses))
+					{
+						usesflag = true;
+					}
+				}
+				if (flag )
+				{
+					flag=false;
+					//continue;
+				}
+				else
+				{
+				 
+					if (aname.contains("*"))
+					{
+						String remove = aname.replace("*", "");
+			
+					
+					drawline = "class " + cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "*"  + "\"" + "class " + remove ;
+					resultString += drawline + "\n";
+					checkclass = cname+ "--" +remove;
+					dependencySet.add(checkclass);
+					for(String s: allInterfaces.keySet())
+					{
+					
+					   if (remove.equalsIgnoreCase(s))
+					   {
+						   drawline = cname + "\"" + "uses"  + "\""  + " ..> "   + remove ;
+							//drawline = cname  + " ..> "   + remove ;
+							resultString += drawline + "\n";
+							checkclass = cname+".."+remove;
+							dependencySet.add(checkclass);
+					   }
+					}
+					}
+					else  if(!aname.isEmpty() && !aname.contains("uses"))
+					{
+					drawline = "class " + cname + "\"" + "1"  + "\"" + " -- "  + "\"" + "1"  + "\"" + "class " + aname ;
+					resultString += drawline + "\n";
+					checkclass = cname+"--"+aname;
+					dependencySet.add(checkclass);
+					}
+				}
+				if (usesflag)
+				{
+					usesflag=false;
+					//continue;
+				}
+				else
+				{
+					if (aname.contains("uses"))
+					
+					{
+					String remove = aname.replace("uses", "");
+					
+					for(String s: allInterfaces.keySet())
+					{
+						
+					   if (remove.equalsIgnoreCase(s))
+					   {
+						   for (String c: allClasses.keySet())
+						   {
+							   if (c.equalsIgnoreCase(cname))
+							   {
+						drawline = cname + "\"" + "uses"  + "\""  + " ..> "   + remove ;
+						//drawline = cname  + " ..> "   + remove ;
+						resultString += drawline + "\n";
+						checkclass = cname+".."+remove;
+						dependencySet.add(checkclass);
+							   }
+						   }
+					   }
+					}
+				}
+				
+				}
+			
+		}	
+			
+		}	
 	
 	}
 	

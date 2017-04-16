@@ -285,36 +285,45 @@ public class ParseClass extends VoidVisitorAdapter{
              
        
         }//end of Body Declaration
-        resul += "\n}\n";
-        if (notinterface)
+        allAttributes.put(n.getName().toString(),attributeSet);
+         //System.out.println(allAttributes);
+         //attributeSet.clear();
+         //System.out.println(modifierAttribute);
+         for(Map.Entry pairs : modifierAttribute.entrySet())
+			{
+				attributegrammer += pairs.getValue().toString();	
+			}	
+     		resul += attributegrammer + constructorgrammer + addmethodgrammer + "\n}\n";
+			attributegrammer="";
+			
+			addmethodgrammer = "";
+    		
+    		constructorgrammer = "";
+        
+        if (n.isInterface())
         {
-        	allClasses.put(n.getName().toString(),resul);
-        	//notinterface=false;
+        	allInterfaces.put(n.getName().toString(),resul);
+        	allInterfaceName.add(n.getName().toString());
         }
         else
         {
-        	allInterfaces.put(n.getName().toString(),resul);
-        	//System.out.println(allInterfaces);
+        	classname = n.getName().toString();
+        	allClasses.put(classname,resul);
+        	
+        	
         }
-        allAttributes.put(n.getName().toString(),attributeSet);
+        
         resul = "";
-        drawDependency();
-        printGrammer();
-        super.visit(n, arg);
-     }
+       
+       for (String inter : allInterfaceName)
+       {
+    	   interfacegrammer += ":" + inter;
+       }
+     
+      
+              super.visit(n, arg);
+     }//end of visit
 	
-	public void printGrammer(){
-		
-		for(Map.Entry pairs : allInterfaces.entrySet())
-		{
-			finalG += pairs.getValue().toString(); 
-	    	}
-		for(Map.Entry pairs : allClasses.entrySet())
-		{
-			finalG += pairs.getValue().toString(); 
-	    
-	    	}
-	}
 
 	public void drawDependency()
 	{
@@ -452,8 +461,8 @@ public class ParseClass extends VoidVisitorAdapter{
     
     
 	public void compile(String inputfile, String outputfile ) {
-		// parse the file
-		File config = new File(inputfile);
+		// parse input java file
+		File config = new File(inputfil);
 		File[] javafileset = config.listFiles();
 		if (javafileset != null) {
 			for (File javaFile : javafileset) {
@@ -465,20 +474,27 @@ public class ParseClass extends VoidVisitorAdapter{
 				CompilationUnit javaClass = null;
 				try {
 					javaClass = JavaParser.parse(javaFile);
+					
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
-				new ParseClass().visit(javaClass, null) ;
-				allclasses.put(classname, javaClass.toString());
-
-				//System.out.println(javaClass.toString());
-				//System.out.println(classname);
-				generatePlantUML(resul,outfile);
-				
-				}
+				//new ParseClass().visit(javaClass, null) ;
+				//System.out.println("next file :");
+				visit(javaClass, null) ;
+			}
+			//System.out.println(allClasses.keySet());
+			//System.out.println(modifierAttribute);
+			//System.out.println(attributeSet);
+			//System.out.println(allAttributes);
+			drawDependency(classname);
+			  printGrammer();
+			generatePlantUML(finalG, outfile);
 		  }
 		}
+	
+	
+	
 		
 	public void generatePlantUML(String intermediateCode, String outpath){
 	 String startUML = "@startuml";

@@ -83,62 +83,56 @@ public class ParseClass extends VoidVisitorAdapter{
         			modifier = "";
         			skipattributes = true;
         		}
-			
-			if (!skipattributes)// skip protected and package attributes
-        		{
+        		
         		List<VariableDeclarator> attributeList = attribute.getVariables();
         				for (VariableDeclarator var : attributeList)
         				{       					
-        					//check if primitive
-        					//System.out.println(var.getType());
-        					if (var.getType() instanceof ReferenceType)
+        					if (var.getType() instanceof ReferenceType)//check if primitive
         					{
         						//check for array
         						if (var.getType().toString().contains("[]"))
         						{
-        							resul += "\n" + modifier ;
-        							resul += var.getName();
-            						resul += ":";
-            						resul += var.getType();
+        							if(!skipattributes)
+        								attributegrammer += "\n" + modifier + var.getName() + ":" + var.getType();
         						}
         						else{
-        						
         							nonPrimitive = var.getType().toString();
         							
         							if (nonPrimitive.contains("Collection"))
         							{
-        							String	s = nonPrimitive.substring(nonPrimitive.indexOf("<")+1);
-              		    			String	 f =s.replace(">", "*");
-              		    			attributeSet.add(f);
-              		    			
+        								String	s = nonPrimitive.substring(nonPrimitive.indexOf("<")+1);
+        								String	 f =s.replace(">", "*");
+        								attributeSet.add(f);
+        								nonPrimitive = "";
         							}
-        							else if(nonPrimitive.contains("String")){	
-        								resul += "\n" + modifier ;
-                						resul += var.getName();
-                						resul += ":";
-                						resul += var.getType();
-                						//attributeSet.add(var.getType().toString());
+        							else if(nonPrimitive.contains("String"))
+        							{
+        								if (!skipattributes)
+        								{
+                						attributegrammer += "\n" + modifier + var.getName() + ":" + var.getType();	
+        								}
         							}
         							else{
-        							attributeSet.add(var.getType().toString());
-        							//System.out.println(var.getType().toString());
-        							//nonPrimitive += var.getName();  
+        							attributeSet.add(var.getType().toString()); 
         							}
         						}       									
-        					}else{
-        						resul += "\n" + modifier ;
-        						resul += var.getName();
-        						resul += ":";
-        						resul += var.getType();
-        					   
-        					//System.out.println(resul);
+        					}else
+        					{ 
+        						if(!skipattributes)
+        							attributegrammer += "\n" + modifier + var.getName() + ":" + var.getType();
         					}   	
         					
-        					modifierAttribute.put(var.getName().toString() ,modifier);
-        					//System.out.println(modifierAttribute);
+        					if (!skipattributes)//Skip protected and package attributes
+        					{
+        					modifierAttribute.put(var.getName().toString() , attributegrammer);
+        					}
+        					skipattributes = false;
+        					attributegrammer ="";
         				}//end of variable Declarator
-        				skipattributes = false;
-        		}//end of skipattributes
+        				
+        				
+        				
+        				//System.out.println(allAttributes);
         	}// end of field Declaration
         	
 		if (bd instanceof MethodDeclaration)

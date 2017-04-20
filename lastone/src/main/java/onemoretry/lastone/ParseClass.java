@@ -160,7 +160,7 @@ public class ParseClass extends VoidVisitorAdapter{
         		}
         	
         		methodname= method.getName().toString();
-        		//System.out.println(methodname);
+        		
         		
         	
         		if(!skipmethod)
@@ -324,6 +324,7 @@ public class ParseClass extends VoidVisitorAdapter{
               super.visit(n, arg);
      }//end of visit
 	
+	
 
 	public void drawDependency()
 	{
@@ -458,6 +459,18 @@ public class ParseClass extends VoidVisitorAdapter{
 	
 	}
 	
+	public void printGrammer(){
+		for(Map.Entry pairs : allInterfaces.entrySet())
+		{
+			finalG += pairs.getValue().toString(); 
+			
+	    }
+		for(Map.Entry pairs : allClasses.entrySet())
+		{
+			finalG += pairs.getValue().toString(); 
+	    }
+	}
+	
     
     
 	public void compile(String inputfile, String outputfile ) {
@@ -483,13 +496,12 @@ public class ParseClass extends VoidVisitorAdapter{
 				//System.out.println("next file :");
 				visit(javaClass, null) ;
 			}
-			//System.out.println(allClasses.keySet());
-			//System.out.println(modifierAttribute);
-			//System.out.println(attributeSet);
-			//System.out.println(allAttributes);
-			drawDependency(classname);
-			  printGrammer();
-			generatePlantUML(finalG, outfile);
+			
+			drawDependency(classname);// add dependency/association grammer
+			
+			printGrammer();//Print Class grammer 
+			
+			generatePlantUML(finalG, outfile);//generate diagram
 		  }
 		}
 	
@@ -517,23 +529,5 @@ public class ParseClass extends VoidVisitorAdapter{
 	 
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-                
-        
-        
-        
-        
-	// CompilationUnit cu = JavaParser.parse(inputfil);
-
-	// new MethodVisitor().visit(cu, null);
-	// new yUMLClass().generateClassdiagram(resul);
-	// new VariableVisitor().visit(cu, null);
 
 }

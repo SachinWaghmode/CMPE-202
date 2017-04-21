@@ -19,17 +19,31 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 public class ParseClass extends VoidVisitorAdapter{
-	static String out = "";
 	static String resul = "";
-	static String nonPrimitive="";
-	static String finalG="";
-	static String drawline="";
-	public static String pUmlinput = "";
-	String classname = "[";
-    	String methodname ="";
-    	String modifier ="";
-	String s1="";
-    	String resultstring="";
+	static String methodgrammer = "";
+	static String addmethodgrammer ="";
+	static String constructorgrammer = "";
+	static String attributegrammer = "";
+	static String interfacegrammer = "";
+	static String dependencyGrammer = "";
+    String methodname ="";
+    String modifier ="";
+    String classname ="";
+    static String resultString="";
+    String drawline="";
+    static String finalG="";
+    static String removeBracket="";
+    static String temp="";
+    static String nonPrimitive="";
+    static String checkclass="";
+    String classKey="";
+    String s1="";
+    //String methodname="";
+    boolean notinterface = false;
+    boolean morethanoneinterface = false;
+    boolean gettersetter = false;
+    boolean skipattributes = false;
+    boolean skipmethod = false;
     
 	Map<String, String> allclasses = new HashMap<String, String>();
 	Map<String, String> allAttributes = new HashMap<String, String>();
@@ -139,18 +153,27 @@ public class ParseClass extends VoidVisitorAdapter{
         	{
         		MethodDeclaration method = (MethodDeclaration) bd;
         		
-			List<Node> methodbody = method.getChildNodes();
-        		for (Node node: methodbody)
+        		methodname= method.getName().toString();
+        		
+        		List<Node> methodbody = method.getChildNodes();
+        		
+        		if (methodname.equalsIgnoreCase("main"))
+        		{		
+        		for (Node node: methodbody)	
         		{
-        			
-        			for(String attributename : attributeSet)
+        			for (String i: allInterfaces.keySet())
         			{
-        				if (node.toString().contains(attributename))
-        				{
-        					//check if method body has only getter setter
+        				if (node.toString().contains(i))
+        				{	
+        			
+        					dependencyGrammer = n.getName().toString()+"\"" + "uses"  + "\""  + " ..> " +i + "\n" ;
+        			
+        					
         				}
         			}
         		}
+        		}
+        		
         		
         		if (method.getModifiers().toString().contains("PUBLIC"))
         			modifier = "+";

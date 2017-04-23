@@ -7,12 +7,18 @@ public class Umlparser {
 			
 		final String infile = args[0];
 		final String outfile = args[1];
+		final String diagram = args[2];
 		
-		ParseClass pc = new ParseClass();
 		//Check if class diagram
-		pc.compile(infile,outfile);
-		//else if sequence diagram
-		//ParseSequence ps = new ParseSequence
-			// ps.compile(infile,outfile)
+		if (diagram.equalsIgnoreCase("class"))
+		{
+			ParseClass  pc = new ParseClass();
+			pc.compile(infile,outfile);
+		}
+		else if (diagram.equalsIgnoreCase("sequence"))
+		{
+			ParseSequence  ps = new ParseSequence();
+			ps.compile(infile,outfile);
+		}
 	}
 }

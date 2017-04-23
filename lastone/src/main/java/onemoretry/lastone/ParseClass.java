@@ -26,30 +26,30 @@ public class ParseClass extends VoidVisitorAdapter{
 	static String attributegrammer = "";
 	static String interfacegrammer = "";
 	static String dependencyGrammer = "";
-    String methodname ="";
-    String modifier ="";
-    String classname ="";
-    static String resultString="";
-    String drawline="";
-    static String finalG="";
-    static String removeBracket="";
-    static String temp="";
-    static String nonPrimitive="";
-    static String checkclass="";
-    String classKey="";
-    String s1="";
-    //String methodname="";
-    boolean notinterface = false;
-    boolean morethanoneinterface = false;
-    boolean gettersetter = false;
-    boolean skipattributes = false;
-    boolean skipmethod = false;
+    	String methodname ="";
+    	String modifier ="";
+    	String classname ="";
+    	static String resultString="";
+    	String drawline="";
+    	static String finalG="";
+    	static String removeBracket="";
+    	static String temp="";
+    	static String nonPrimitive="";
+    	static String checkclass="";
+    	String classKey="";
+    	String s1="";
+    	
     
 	Map<String, String> allclasses = new HashMap<String, String>();
 	Map<String, String> allAttributes = new HashMap<String, String>();
 
 	
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+	boolean notinterface = false;
+    	boolean morethanoneinterface = false;
+    	boolean gettersetter = false;
+    	boolean skipattributes = false;
+    	boolean skipmethod = false;
         List<BodyDeclaration<?>> classList = n.getMembers() ;
          if(n.isInterface())
         {
@@ -143,10 +143,7 @@ public class ParseClass extends VoidVisitorAdapter{
         					skipattributes = false;
         					attributegrammer ="";
         				}//end of variable Declarator
-        				
-        				
-        				
-        				//System.out.println(allAttributes);
+        			
         	}// end of field Declaration
         	
 		if (bd instanceof MethodDeclaration)
@@ -205,12 +202,12 @@ public class ParseClass extends VoidVisitorAdapter{
 						{
         					String changemodifier= pairs.getValue().toString() ;
         					pairs.setValue(changemodifier.replace("-", "+"));
-						//System.out.println(pairs.getValue());
+						
 						}
 						attributegrammer += pairs.getValue().toString();
-						//System.out.println(resul);
+						
         			}	
-        			//System.out.println(modifierAttribute);
+        			
         			resul += attributegrammer;
         			attributegrammer ="";
         			
@@ -309,9 +306,7 @@ public class ParseClass extends VoidVisitorAdapter{
        
         }//end of Body Declaration
         allAttributes.put(n.getName().toString(),attributeSet);
-         //System.out.println(allAttributes);
-         //attributeSet.clear();
-         //System.out.println(modifierAttribute);
+         
          for(Map.Entry pairs : modifierAttribute.entrySet())
 			{
 				attributegrammer += pairs.getValue().toString();	
@@ -351,9 +346,6 @@ public class ParseClass extends VoidVisitorAdapter{
 
 	public void drawDependency()
 	{
-		
-        
-		String ckcoll="";
 		Boolean flag=false;
 		Boolean usesflag=false;
 		String removedependency = "";
@@ -366,10 +358,6 @@ public class ParseClass extends VoidVisitorAdapter{
 			String cname = allattri.getKey().toString();
 			String aname = allattri.getValue().toString();
 			
-			//System.out.println("insider :" +aname);
-			//drawline = cname ;
-			//for(String s: allInterfaces.keySet())
-			//{
 			String atrriarray[] = aname.split(", ");
 			for (int i = 0; i < atrriarray.length; i++)
 			{
@@ -392,7 +380,7 @@ public class ParseClass extends VoidVisitorAdapter{
 					removedependency = cname + "--" + aname;
 					adddependency = aname + "--" + cname;
 				}
-				//System.out.println("set :"+dependencySet);
+	
 				for (String sd : dependencySet)
 				{
 					if (sd.equalsIgnoreCase(removedependency) || sd.equalsIgnoreCase(adddependency))
@@ -407,7 +395,7 @@ public class ParseClass extends VoidVisitorAdapter{
 				if (flag )
 				{
 					flag=false;
-					//continue;
+					
 				}
 				else
 				{
@@ -445,7 +433,7 @@ public class ParseClass extends VoidVisitorAdapter{
 				if (usesflag)
 				{
 					usesflag=false;
-					//continue;
+					
 				}
 				else
 				{
@@ -515,8 +503,7 @@ public class ParseClass extends VoidVisitorAdapter{
 					
 					e.printStackTrace();
 				}
-				//new ParseClass().visit(javaClass, null) ;
-				//System.out.println("next file :");
+				
 				visit(javaClass, null) ;
 			}
 			
